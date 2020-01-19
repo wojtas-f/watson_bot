@@ -1,7 +1,6 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
 const state = require('../appState')
-const prepareOutput = require('../message')
 
 const assistant = new AssistantV2({
     version: '2019-02-28',
@@ -32,6 +31,15 @@ exports.renderIndex = (req, res) => {
 }
 
 /**
+ *  Render chat page
+ *  GET(/)
+ *  @function
+ */
+exports.renderChat = (req, res) => {
+    res.render('chat')
+}
+
+/**
  *  Return message
  *  POST(/api/message)
  *  @function
@@ -40,11 +48,11 @@ exports.sendMessage = (req, res) => {
     let assistantId = process.env.ASSISTANT_ID
 
     let userInputMessage = ''
-
+    console.log(req.body)
     if (req.body.message) {
         userInputMessage = req.body.message
     }
-
+    console.log('User input: ', userInputMessage)
     var payload = {
         assistantId: assistantId,
         sessionId: state.session_id,
@@ -63,9 +71,8 @@ exports.sendMessage = (req, res) => {
             return res.status(status).json(err)
         }
 
-        const assistant_response = data.result.output.generic[0].text
-        const output = prepareOutput(userInputMessage, assistant_response)
-        res.render('main', { output })
+        let assistant_response = data.result.output.generic[0].text
+        res.json(assistant_response)
     })
 }
 

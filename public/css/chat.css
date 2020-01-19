@@ -11,13 +11,10 @@
 
 }
 
-.user-time{
-    text-align: center;
+.time{
+    font-style: italic;
 }
 
-.assist-time{
-    text-align: right!important;
-}
 
 .break{
     margin: 25px 5px;
