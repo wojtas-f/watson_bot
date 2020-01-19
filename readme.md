@@ -1,6 +1,8 @@
 # Bot application with Watson Assistant
 
-Primary reason for creating this app was to test [Watson Assistant API](https://cloud.ibm.com/apidocs/assistant/assistant-v2?code=node#introduction). For that reason I've decided to create only the most basic UI.
+Primary reason for creating this app was to test [Watson Assistant API](https://cloud.ibm.com/apidocs/assistant/assistant-v2?code=node#introduction). For that reason I've decided to create only the most basic UI. This app uses the Warson Assistant V2 API.
+
+If you need more information you can check a [sample application](https://github.com/watson-developer-cloud/assistant-simple) that demonstrates the Watson Assistant service.
 
 ## Technology
 
@@ -17,7 +19,7 @@ npm install
 
 ## How to start
 
-Before you start the application you need to create an [IBM Cloud account](https://cloud.ibm.com/login), add Watson Assistant in Service section and acquire the following information
+Before you start the application you need to create an [IBM Cloud account](https://cloud.ibm.com/login), add Watson Assistant in Service section and acquire the following information.
 
 ```env
 ASSISTANT_ID=
@@ -32,7 +34,7 @@ npm run start
 ## Dependencies
 
 ```JavaScript
- "dependencies": {
+ "depencendies": {
     "express": "^4.17.1",
     "handlebars": "^4.7.2",
     "hbs": "^4.1.0",
