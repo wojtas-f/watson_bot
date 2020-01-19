@@ -3,6 +3,7 @@ const app = express()
 const hbs = require('hbs')
 const path = require('path')
 const APIRoutes = require('./routes/api')
+const PageRoutes = require('./routes/pages')
 const cors = require('cors')
 
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -19,5 +20,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(APIRoutes)
+app.use(PageRoutes)
 
 module.exports = app

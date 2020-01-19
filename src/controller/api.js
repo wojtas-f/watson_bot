@@ -22,24 +22,6 @@ assistant
     })
 
 /**
- *  Render index page
- *  GET(/)
- *  @function
- */
-exports.renderIndex = (req, res) => {
-    res.render('main')
-}
-
-/**
- *  Render chat page
- *  GET(/)
- *  @function
- */
-exports.renderChat = (req, res) => {
-    res.render('chat')
-}
-
-/**
  *  Return message
  *  POST(/api/message)
  *  @function
@@ -48,11 +30,11 @@ exports.sendMessage = (req, res) => {
     let assistantId = process.env.ASSISTANT_ID
 
     let userInputMessage = ''
-    console.log(req.body)
+
     if (req.body.message) {
         userInputMessage = req.body.message
     }
-    console.log('User input: ', userInputMessage)
+
     var payload = {
         assistantId: assistantId,
         sessionId: state.session_id,
@@ -74,13 +56,4 @@ exports.sendMessage = (req, res) => {
         let assistant_response = data.result.output.generic[0].text
         res.json(assistant_response)
     })
-}
-
-/**
- *  Get error page
- *  GET(*)
- * @function
- */
-exports.wildcard = (req, res) => {
-    res.render('404')
 }
