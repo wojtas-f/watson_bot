@@ -37,7 +37,6 @@ const sendMessageToAssistant = async userInput => {
         body: JSON.stringify(formData)
     })
     let data = await res.json()
-    console.log(data)
     return data
 }
 
