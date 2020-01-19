@@ -1,6 +1,7 @@
 const express = require('express')
 const state = require('./keys')
 const app = express()
+const renderPage = require('./templates/message')
 
 app.use(express.static('./public')) // load UI from public folder
 app.use(express.json())
@@ -16,22 +17,6 @@ const assistant = new AssistantV2({
     }),
     url: process.env.ASSISTANT_URL
 })
-
-//TODO: CREATE SESSION
-
-// app.get('/api/session', (req, res) => {
-//     assistant
-//         .createSession({
-//             assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
-//         })
-//         .then(res => {
-//             //console.log(JSON.stringify(res, null, 2))
-//             console.log(res.result)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// })
 
 assistant
     .createSession({
@@ -50,11 +35,10 @@ assistant
 app.post('/api/message', function(req, res) {
     let assistantId = process.env.ASSISTANT_ID
 
-    var textIn = ''
+    let textIn = ''
 
     if (req.body.message) {
         textIn = req.body.message
-        console.log('1 Exists', textIn)
     }
 
     var payload = {
@@ -65,19 +49,18 @@ app.post('/api/message', function(req, res) {
             text: textIn
         }
     }
-    console.log(payload.session_id)
+
     // Send the input to the assistant service
     assistant.message(payload, function(err, data) {
-        console.log('2 Sending')
         if (err) {
-            console.log('3 Error')
             console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
             return res.status(status).json(err)
         }
-        console.log('4 Success')
-        return res.json(data)
+
+        const assistant_response = data.result.output.generic[0].text
+        return res.send(renderPage(textIn, assistant_response))
     })
 })
 
