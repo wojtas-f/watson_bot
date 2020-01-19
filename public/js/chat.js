@@ -20,6 +20,7 @@ $messageForm.addEventListener('submit', async e => {
     $messageFormButton.removeAttribute('disabled')
     $messageFormInput.value = ''
     $messageFormInput.focus()
+    scrollToBottom()
 })
 
 const updateChatDisplay = messageTemplate => {
@@ -71,6 +72,11 @@ const assistMessage = msg_content => {
         </div>
     </div>
     `
+}
+
+function scrollToBottom() {
+    $chatDisplay.scrollTop =
+        $chatDisplay.scrollHeight - $chatDisplay.clientHeight
 }
 
 const getCurrentTime = () => {
