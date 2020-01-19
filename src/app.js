@@ -11,7 +11,7 @@ app.set('view engine', 'hbs')
 app.set('views', viewPath)
 hbs.registerPartials(partialPath)
 
-app.use(express.static('./public')) // load UI from public folder
+app.use(express.static('../public')) // load UI from public folder
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

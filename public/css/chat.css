@@ -1,0 +1,24 @@
+.display-chat {
+    margin-top: 55px;
+    width: 90vh;
+    background-color: rgba(229, 243, 204, 0.486);
+    border-radius: 15px;
+}
+
+.time-display {
+    display: flex !important;
+    align-items: center;
+
+}
+
+.user-time{
+    text-align: center;
+}
+
+.assist-time{
+    text-align: right!important;
+}
+
+.break{
+    margin: 25px 5px;
+}
