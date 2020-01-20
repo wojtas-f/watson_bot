@@ -13,15 +13,25 @@ $messageForm.addEventListener('submit', async e => {
     const userOutput = userMessage(message)
     updateChatDisplay(userOutput)
 
-    const assistantResponse = await sendMessageToAssistant(message)
-    const assistantOutput = assistMessage(assistantResponse)
-    updateChatDisplay(assistantOutput)
+    const { assistant_response, intent } = await sendMessageToAssistant(message)
+    const assistantOutput = assistMessage(assistant_response)
 
+    updateChatDisplay(assistantOutput)
+    setButtonAndView(intent)
+})
+
+const setButtonAndView = intent => {
+    if (intent === 'General_Ending') {
+        console.log('Clear it now')
+        setTimeout(() => {
+            $chatDisplay.innerHTML = ''
+        }, 1000)
+    }
     $messageFormButton.removeAttribute('disabled')
     $messageFormInput.value = ''
     $messageFormInput.focus()
     scrollToBottom()
-})
+}
 
 const updateChatDisplay = messageTemplate => {
     $chatDisplay.innerHTML += messageTemplate
@@ -38,7 +48,10 @@ const sendMessageToAssistant = async userInput => {
         body: JSON.stringify(formData)
     })
     let data = await res.json()
-    return data
+    const assistant_response = data.assistant_response
+    const intent = data.intent
+
+    return { assistant_response, intent }
 }
 
 const userMessage = msg_content => {

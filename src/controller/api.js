@@ -34,7 +34,7 @@ exports.sendMessage = async (req, res) => {
             text: userInputMessage
         }
     }
-    console.log('payload.sessionId: ', payload.sessionId)
+
     // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
@@ -45,17 +45,14 @@ exports.sendMessage = async (req, res) => {
             return res.status(status).json(err)
         }
 
-        console.log(data.result.output.intents[0].intent)
-
         const intent = data.result.output.intents[0].intent
-
         let assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
             endSession(req.session.session_id, assistantId)
             req.session.session_id = null
         }
-        res.json(assistant_response)
+        res.json({ assistant_response, intent })
     })
 }
 
@@ -66,7 +63,7 @@ const startSession = async () => {
             assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
         })
         .then(res => {
-            console.log('1:', res.result.session_id)
+            console.log('Watson Assistant Session started')
             SESSION_ID = res.result.session_id
         })
         .catch(err => {
