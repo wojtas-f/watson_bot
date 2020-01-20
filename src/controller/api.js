@@ -28,16 +28,16 @@ assistant
  */
 exports.sendMessage = (req, res) => {
     let assistantId = process.env.ASSISTANT_ID
-
+    let sessionId = state.session_id
     let userInputMessage = ''
 
     if (req.body.message) {
         userInputMessage = req.body.message
     }
 
-    var payload = {
-        assistantId: assistantId,
-        sessionId: state.session_id,
+    const payload = {
+        assistantId,
+        sessionId,
         input: {
             message_type: 'text',
             text: userInputMessage
@@ -45,7 +45,7 @@ exports.sendMessage = (req, res) => {
     }
 
     // Send the input to the assistant service
-    assistant.message(payload, function(err, data) {
+    assistant.message(payload, (err, data) => {
         if (err) {
             console.log(err)
             const status =
@@ -53,7 +53,29 @@ exports.sendMessage = (req, res) => {
             return res.status(status).json(err)
         }
 
+        console.log(data.result.output.intents[0].intent)
+
+        const intent = data.result.output.intents[0].intent
+
         let assistant_response = data.result.output.generic[0].text
+
+        if (intent === 'General_Ending') {
+            endSession(sessionId, assistantId)
+        }
         res.json(assistant_response)
     })
+}
+
+const endSession = (sessionId, assistantId) => {
+    assistant
+        .deleteSession({
+            assistantId,
+            sessionId
+        })
+        .then(res => {
+            console.log(JSON.stringify(res, null, 2))
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }
