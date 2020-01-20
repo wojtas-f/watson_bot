@@ -1,7 +1,5 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
-const state = require('../appState')
-const prepareOutput = require('../message')
 
 const assistant = new AssistantV2({
     version: '2019-02-28',
@@ -11,43 +9,27 @@ const assistant = new AssistantV2({
     url: process.env.ASSISTANT_URL
 })
 
-assistant
-    .createSession({
-        assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
-    })
-    .then(res => {
-        state.session_id = res.result.session_id
-    })
-    .catch(err => {
-        console.log(err)
-    })
-
-/**
- *  Render index page
- *  GET(/)
- *  @function
- */
-exports.renderIndex = (req, res) => {
-    res.render('main')
-}
-
 /**
  *  Return message
  *  POST(/api/message)
  *  @function
  */
-exports.sendMessage = (req, res) => {
-    let assistantId = process.env.ASSISTANT_ID
+exports.sendMessage = async (req, res) => {
+    if (!req.session.session_id) {
+        sessionId = await startSession()
+        console.log('2: sessionId')
+    }
 
+    let assistantId = process.env.ASSISTANT_ID
     let userInputMessage = ''
 
     if (req.body.message) {
         userInputMessage = req.body.message
     }
 
-    var payload = {
-        assistantId: assistantId,
-        sessionId: state.session_id,
+    const payload = {
+        assistantId,
+        sessionId: req.session.session_id,
         input: {
             message_type: 'text',
             text: userInputMessage
@@ -55,25 +37,52 @@ exports.sendMessage = (req, res) => {
     }
 
     // Send the input to the assistant service
-    assistant.message(payload, function(err, data) {
+    assistant.message(payload, (err, data) => {
         if (err) {
-            console.log(err)
+            console.log('THE BIG BAD ERROR')
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
             return res.status(status).json(err)
         }
 
-        const assistant_response = data.result.output.generic[0].text
-        const output = prepareOutput(userInputMessage, assistant_response)
-        res.render('main', { output })
+        console.log(data.result.output.intents[0].intent)
+
+        const intent = data.result.output.intents[0].intent
+
+        let assistant_response = data.result.output.generic[0].text
+
+        if (intent === 'General_Ending') {
+            endSession(req.session.session_id, assistantId)
+            req.session.session_id = null
+        }
+        res.json(assistant_response)
     })
 }
 
-/**
- *  Get error page
- *  GET(*)
- * @function
- */
-exports.wildcard = (req, res) => {
-    res.render('404')
+const startSession = async () => {
+    await assistant
+        .createSession({
+            assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
+        })
+        .then(res => {
+            console.log('1: ', res.result.session_id)
+            return res.result.session_id
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
+const endSession = (sessionId, assistantId) => {
+    assistant
+        .deleteSession({
+            assistantId,
+            sessionId
+        })
+        .then(res => {
+            console.log(JSON.stringify(res, null, 2))
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }

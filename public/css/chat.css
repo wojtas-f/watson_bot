@@ -1,0 +1,27 @@
+.display-chat {
+    margin-top: 55px;
+    width: 100%;
+    background-color: rgba(229, 243, 204, 0.486);
+    border-radius: 15px 15px 0 0;
+    height: 50vh; 
+    border-top: 1px solid black;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.send-message{
+    width: 100%;
+}
+
+.time-display {
+    display: flex !important;
+    align-items: center;
+}
+
+.time{
+    font-style: italic;
+}
+
+.break{
+    margin: 25px 5px;
+}

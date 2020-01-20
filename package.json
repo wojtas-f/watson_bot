@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "handlebars": "^4.7.2",
     "hbs": "^4.1.0",
@@ -14,7 +16,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "dev": "env-cmd -f ./config/config.env nodemon src/server.js",
+    "dev": "env-cmd -f ./config/config.env nodemon src/server.js -e js,css,hbs,html",
     "start": "env-cmd -f ./config/config.env node src/server.js"
   },
   "author": "",

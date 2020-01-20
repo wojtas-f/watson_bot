@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Watson Assistant Bot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Home</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"
+        />
+        <link rel="stylesheet" href="./css/chat.css" />
+    </head>
+    <body>
+        {{>header}}
+        <div class="ui container">
+            <h2 class="ui header">The bot should be able to handle</h2>
 
-    {{#if output}}
-        {{#each output}}
-            {{>user}}
-            {{>assistant}}    
-        {{/each}}
-    {{/if}}
-    {{>form}}
-</body>
+            <div class="ui positive message">
+                <div class="header">
+                    Greeting
+                </div>
+                <p>The bot should be able to understand simple greetings</p>
+            </div>
+            <div class="ui yellow message">
+                <div class="header">
+                    About me
+                </div>
+                <p>The bot will be happy to tell you about itself</p>
+            </div>
+            <div class="ui blue message">
+                <div class="header">
+                    Jokes
+                </div>
+                <p>Ask the bot to tell you a joke</p>
+            </div>
+            <div class="ui green message">
+                <div class="header">
+                    Conversation ending
+                </div>
+                <p>The bot will wish you a nice day, when you decide to end the conversation</p>
+            </div>
+        </div>
+        <script src="./js/chat.js"></script>
+    </body>
 </html>
