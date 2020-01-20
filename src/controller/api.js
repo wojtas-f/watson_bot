@@ -16,8 +16,7 @@ const assistant = new AssistantV2({
  */
 exports.sendMessage = async (req, res) => {
     if (!req.session.session_id) {
-        sessionId = await startSession()
-        console.log('2: sessionId')
+        req.session.session_id = await startSession()
     }
 
     let assistantId = process.env.ASSISTANT_ID
@@ -35,11 +34,12 @@ exports.sendMessage = async (req, res) => {
             text: userInputMessage
         }
     }
-
+    console.log('payload.sessionId: ', payload.sessionId)
     // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
             console.log('THE BIG BAD ERROR')
+            console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
             return res.status(status).json(err)
@@ -60,17 +60,19 @@ exports.sendMessage = async (req, res) => {
 }
 
 const startSession = async () => {
+    let SESSION_ID
     await assistant
         .createSession({
             assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
         })
         .then(res => {
-            console.log('1: ', res.result.session_id)
-            return res.result.session_id
+            console.log('1:', res.result.session_id)
+            SESSION_ID = res.result.session_id
         })
         .catch(err => {
             console.log(err)
         })
+    return SESSION_ID
 }
 
 const endSession = (sessionId, assistantId) => {
