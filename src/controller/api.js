@@ -1,6 +1,5 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
-const state = require('../appState')
 
 const assistant = new AssistantV2({
     version: '2019-02-28',
@@ -10,25 +9,18 @@ const assistant = new AssistantV2({
     url: process.env.ASSISTANT_URL
 })
 
-assistant
-    .createSession({
-        assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
-    })
-    .then(res => {
-        state.session_id = res.result.session_id
-    })
-    .catch(err => {
-        console.log(err)
-    })
-
 /**
  *  Return message
  *  POST(/api/message)
  *  @function
  */
-exports.sendMessage = (req, res) => {
+exports.sendMessage = async (req, res) => {
+    if (!req.session.session_id) {
+        sessionId = await startSession()
+        console.log('2: sessionId')
+    }
+
     let assistantId = process.env.ASSISTANT_ID
-    let sessionId = state.session_id
     let userInputMessage = ''
 
     if (req.body.message) {
@@ -37,7 +29,7 @@ exports.sendMessage = (req, res) => {
 
     const payload = {
         assistantId,
-        sessionId,
+        sessionId: req.session.session_id,
         input: {
             message_type: 'text',
             text: userInputMessage
@@ -47,7 +39,7 @@ exports.sendMessage = (req, res) => {
     // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
-            console.log(err)
+            console.log('THE BIG BAD ERROR')
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
             return res.status(status).json(err)
@@ -60,10 +52,25 @@ exports.sendMessage = (req, res) => {
         let assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
-            endSession(sessionId, assistantId)
+            endSession(req.session.session_id, assistantId)
+            req.session.session_id = null
         }
         res.json(assistant_response)
     })
+}
+
+const startSession = async () => {
+    await assistant
+        .createSession({
+            assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
+        })
+        .then(res => {
+            console.log('1: ', res.result.session_id)
+            return res.result.session_id
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }
 
 const endSession = (sessionId, assistantId) => {
