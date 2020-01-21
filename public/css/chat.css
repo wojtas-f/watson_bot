@@ -1,12 +1,23 @@
+.chat-container{
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+/* TODO: toggle full wiev */
 .display-chat {
     margin-top: 55px;
     width: 100%;
     background-color: rgba(229, 243, 204, 0.486);
     border-radius: 15px 15px 0 0;
     height: 50vh; 
-    border-top: 1px solid black;
+    border-top: 2px solid black;
+    border-left:5px solid black;
+    border-right:5px solid black;
+    padding: 0 20px;
+    box-sizing: border-box;
     overflow-y: scroll;
     overflow-x: hidden;
+    
 }
 
 .send-message{
