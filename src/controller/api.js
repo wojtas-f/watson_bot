@@ -1,6 +1,8 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
 
+// TODO: Fix the problem withe the Session id when user did not end the conversation
+
 const assistant = new AssistantV2({
     version: '2019-02-28',
     authenticator: new IamAuthenticator({

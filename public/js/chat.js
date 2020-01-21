@@ -5,6 +5,8 @@ const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 const $chatDisplay = document.querySelector('#chat-display')
 
+// TODO: add penguin tech support with picture of completely broken mashine (asking if the pc looks like this)
+
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
     $messageFormButton.setAttribute('disabled', 'disabled')
@@ -15,7 +17,7 @@ $messageForm.addEventListener('submit', async e => {
 
     const { assistant_response, intent } = await sendMessageToAssistant(message)
     const assistantOutput = assistMessage(assistant_response)
-
+    // TODO: Block the option to send empty message
     updateChatDisplay(assistantOutput)
     setButtonAndView(intent)
 })
