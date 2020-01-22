@@ -7,7 +7,7 @@ const PageRoutes = require('./routes/pages')
 const cors = require('cors')
 const cookieSession = require('cookie-session')
 
-const publicDirectoryPath = path.join(__dirname, '../public')
+const publicDirectoryPath = path.join(__dirname, '../dist')
 const viewPath = path.join(__dirname, '../templates/views')
 const partialPath = path.join(__dirname, '../templates/partials')
 

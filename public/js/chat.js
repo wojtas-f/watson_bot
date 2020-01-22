@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 console.log('Success')
 
 const $messageForm = document.querySelector('#message-form')
