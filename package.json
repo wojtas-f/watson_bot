@@ -26,9 +26,10 @@
   },
   "scripts": {
     "dev": "env-cmd -f ./config/config.env nodemon src/server.js -e js,css,hbs,html",
-    "start": "webpack --mode development --watch",
+    "webpack-dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
-    "server": "webpack-dev-server --inline --hot"
+    "server": "webpack-dev-server --inline --hot",
+    "start": "env-cmd -f ./config/config.env node src/server.js"
   },
   "browserslist": [
     "last 1 version",
