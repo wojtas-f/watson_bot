@@ -11,6 +11,5 @@ export const sendMessageToAssistant = async userInput => {
     let data = await res.json()
     const assistant_response = data.assistant_response
     const intent = data.intent
-
     return { assistant_response, intent }
 }

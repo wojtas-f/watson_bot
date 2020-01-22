@@ -1,34 +1,40 @@
-export const userTemplate = msg_content => {
-    const time = getCurrentTime()
-    return `
-        <div class="ui grid">
-            <div class="six wide column">
-                <div class="ui blue message user-input msg user">
-                    <p>${msg_content}</p>
-                </div>
-            </div>
-            <div class="ten wide column time-display">
-                    <p class="time">${time}</p>
-            </div>
-        </div>
-`
-}
-export const assistantTemplate = msg_content => {
+const {
+    updateChatDisplay,
+    setDisplayToViewNewMessage
+} = require('./displayController')
+
+export const displayMessageOnChatScreen = input_object => {
+    const { message_content, assistant_response, identity } = input_object
+
     const time = getCurrentTime()
 
-    return `
-    <hr class="break">
-        <div class="ui grid">
-            <div class="ten wide column time-display">
-                <p class="time">${time}</p>
-            </div>
-        <div class="six wide column">
-            <div class="ui success message user-input msg assist">
-                <p>${msg_content}</p>
-            </div>
+    let outputMessage = `<div class="ui grid">`
+
+    if (identity === 'user') {
+        outputMessage += messageTemplate(message_content)
+        outputMessage += timeTemplate(time)
+    }
+    if (identity === 'watson') {
+        outputMessage += timeTemplate(time)
+        outputMessage += messageTemplate(assistant_response)
+    }
+    outputMessage += `</div>`
+    updateChatDisplay(outputMessage)
+    setDisplayToViewNewMessage()
+}
+
+const timeTemplate = time => {
+    return `<div class="ten wide column time-display">
+        <p class="time">${time}</p>
+    </div>`
+}
+
+const messageTemplate = message => {
+    return `<div class="six wide column">
+        <div class="ui success message user-input msg assist">
+            <p>${message}</p>
         </div>
-    </div>
-    `
+    </div>`
 }
 
 const getCurrentTime = () => {

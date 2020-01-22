@@ -1,6 +1,6 @@
 # Bot application with Watson Assistant
 
-Primary reason for creating this app was to test [Watson Assistant API](https://cloud.ibm.com/apidocs/assistant/assistant-v2?code=node#introduction). For that reason I've decided to create only the most basic UI. This app uses the Warson Assistant V2 API.
+Primary reason for creating this app was to test [Watson Assistant API](https://cloud.ibm.com/apidocs/assistant/assistant-v2?code=node#introduction). For that reason I've decided to create only the most basic UI. This app uses the Watson Assistant V2 API.
 
 If you need more information you can check a [sample application](https://github.com/watson-developer-cloud/assistant-simple) that demonstrates the Watson Assistant service.
 
