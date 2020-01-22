@@ -6,6 +6,7 @@ const $messageFormButton = $messageForm.querySelector('button')
 const $chatDisplay = document.querySelector('#chat-display')
 
 // TODO: add penguin tech support with picture of completely broken mashine (asking if the pc looks like this)
+// TODO: add webpack and refactor this file
 
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
