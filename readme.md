@@ -15,7 +15,7 @@ If you need more information you can check a [sample application](https://github
 
 Before you start the application you need to create an [IBM Cloud account](https://cloud.ibm.com/login), add Watson Assistant in Service section and acquire the ID, APIKEY and URL.
 
-Next you need t oinstall all of the dependencies
+Next you should install all of the dependencies
 
 ```bash
 npm install
@@ -29,7 +29,7 @@ ASSISTANT_IAM_APIKEY=
 ASSISTANT_URL=
 ```
 
-Run the following command to create the chat.bundle.js file
+Run the *build* command to create the chat.bundle.js file
 
 ```bash
 npm run build
