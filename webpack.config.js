@@ -3,10 +3,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
     mode: 'development',
-    entry: './public/js/chat.js',
+    entry: ['@babel/polyfill', './public/js/chat.js'],
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 9000
+    },
     output: {
-        filename: 'main.js',
-        path: path.resolve(__dirname, 'dist/js')
+        filename: 'chat.bundle.js',
+        path: path.resolve(__dirname, 'dist/js'),
+        publicPath: '/dist/'
     },
     watch: false,
     mode: 'development',
