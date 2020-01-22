@@ -15,9 +15,15 @@ const $messageFormButton = $messageForm.querySelector('button')
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
     deactivateButton()
-    // // TODO: Rectrict the option to send empty message
-
     const message_content = e.target.message.value
+    const msgIsEmpty = messageIsEmpty(message_content)
+    if (msgIsEmpty) {
+        activateButton()
+        const warning_content = 'The message can not be empty'
+        displayMessageOnChatScreen({ warning_content, identity: 'warning' })
+        return
+    }
+
     displayMessageOnChatScreen({ message_content, identity: 'user' })
 
     const { assistant_response, intent } = await sendMessageToAssistant(
@@ -26,12 +32,20 @@ $messageForm.addEventListener('submit', async e => {
 
     displayMessageOnChatScreen({ assistant_response, identity: 'watson' })
 
-    if (endConversationIntent(intent)) {
+    const endchat = endConversationIntent(intent)
+    if (endchat) {
         setTimeout(clearChat(), 1000)
     }
 
     activateButton()
 })
+
+const messageIsEmpty = message_content => {
+    if (message_content === '') {
+        return true
+    }
+    return false
+}
 
 const endConversationIntent = intent => {
     if (intent === 'General_Ending') {
