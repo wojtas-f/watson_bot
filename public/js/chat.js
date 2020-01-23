@@ -32,10 +32,7 @@ $messageForm.addEventListener('submit', async e => {
 
     displayMessageOnChatScreen({ assistant_response, identity: 'watson' })
 
-    const endchat = endConversationIntent(intent)
-    if (endchat) {
-        setTimeout(clearChat(), 1000)
-    }
+    await checkIntent(intent)
 
     activateButton()
 })
@@ -52,6 +49,16 @@ const endConversationIntent = intent => {
         return true
     }
     return false
+}
+
+const checkIntent = async intent => {
+    if (intent === 'General_Ending') {
+        setTimeout(clearChat(), 1000)
+    }
+    if (intent === 'Session_restart') {
+        const restart = await fetch('/api/session/resetid', { method: 'post' })
+        console.log('Session ID cleared', restart)
+    }
 }
 
 const activateButton = () => {

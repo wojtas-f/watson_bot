@@ -44,6 +44,16 @@ exports.sendMessage = async (req, res) => {
             console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
+            console.log('message', err.message)
+            console.log('headers.connection', err.headers.connection)
+            console.log('code', err.code)
+            if (isInvalidId(err.message, err.headers.connection, err.code)) {
+                console.log('ERRORRROROROROROR')
+                let assistant_response =
+                    'Wait a second please. I have to restart the session.'
+                let intent = 'Session_restart'
+                return res.json({ assistant_response, intent })
+            }
             return res.status(status).json(err)
         }
 
@@ -86,4 +96,15 @@ const endSession = (sessionId, assistantId) => {
         .catch(err => {
             console.log(err)
         })
+}
+
+const isInvalidId = (message, connection, code) => {
+    if (
+        message === 'Invalid Session' &&
+        connection === 'close' &&
+        code === 404
+    ) {
+        return true
+    }
+    return false
 }

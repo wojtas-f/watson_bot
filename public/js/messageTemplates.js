@@ -35,15 +35,17 @@ export const displayMessageOnChatScreen = input_object => {
 
 const timeTemplate = time => {
     return `
-    <div class="ten wide column time-display">
-        <p class="time">${time}</p>
+    <div class="eight wide column time-display">
+        <div class="time-container">
+            <p class="time">${time}</p>
+        </div>    
     </div>
     `
 }
 
 const messageTemplate = (message, className) => {
     return `
-    <div class="six wide column">
+    <div class="eight wide column">
         <div class="ui ${className} message">
             <p>${message}</p>
         </div>

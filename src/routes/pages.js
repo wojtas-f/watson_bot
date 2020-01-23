@@ -10,13 +10,14 @@ router.get('/api/session', (req, res) => {
     res.send(req.session.session_id + ' :ID sesji')
 })
 
-router.get('/api/session/null', (req, res) => {
-    let ok = 'Not'
+router.post('/api/session/resetid', (req, res) => {
+    console.log('Cleare id endpoint reached')
+    let session_id_cleared = false
     req.session.session_id = null
     if (!req.session.session_id) {
-        ok = 'Done'
+        session_id_cleared = true
     }
-    res.send(ok)
+    res.send(session_id_cleared)
 })
 
 router.route('/*').get(wildcard)
