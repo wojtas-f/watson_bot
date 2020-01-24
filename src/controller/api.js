@@ -36,8 +36,8 @@ exports.sendMessage = async (req, res) => {
             text: userInputMessage
         }
     }
+    saveMessage(req, userInputMessage, (intent = 'Ask_Assistant'))
 
-    // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
             const status =
@@ -52,6 +52,7 @@ exports.sendMessage = async (req, res) => {
             }
             return res.status(status).json(err)
         }
+
         let intent = ''
         const res_type = data.result.output.generic[0].response_type
         intent = checkIntent(data.result.output.intents[0])
@@ -65,12 +66,30 @@ exports.sendMessage = async (req, res) => {
         if (responseIsImage(res_type)) {
             assistant_response = data.result.output.generic[0].source
             intent = 'Display_image'
-            return res.json({ assistant_response, intent })
         }
 
+        saveMessage(req, assistant_response, intent)
         res.json({ assistant_response, intent })
     })
 }
+
+/**
+ *  Return message
+ *  GET(/api/chat/content)
+ *  @function
+ */
+exports.loadChatCotnent = (req, res) => {
+    res.send(req.session.chat)
+}
+
+const saveMessage = (req, message, intent) => {
+    if (!req.session.chat) {
+        req.session.chat = []
+    }
+    const chat = req.session.chat
+    chat.push({ message, intent })
+}
+
 const checkIntent = intents_first_element => {
     let intent = ''
     if (intents_first_element === undefined) {

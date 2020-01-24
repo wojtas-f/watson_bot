@@ -16,8 +16,12 @@ exports.renderChat = (req, res) => {
     res.render('chat')
 }
 
+/**
+ * Reset session id to generate new session id
+ * POST(/session/resetid)
+ * @function
+ */
 exports.clearSession = (req, res) => {
-    console.log('-Clear id- endpoint reached')
     let session_id_cleared = false
     req.session.session_id = null
     if (!req.session.session_id) {
