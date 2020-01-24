@@ -1,16 +1,15 @@
 const _ = require('lodash')
 require('@babel/polyfill') // to use async functions with webpack
 
-const { displayMessageOnChatScreen } = require('./messageTemplates')
+const { displayMessageOnChatScreen } = require('./renderMessage')
 const { sendMessageToAssistant } = require('./sendMessage')
-const { clearChat } = require('./displayController')
+const { sendResponseToController } = require('./messageController')
 
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 
 // TODO: add penguin tech support with picture of completely broken mashine (asking if the pc looks like this)
-// TODO: add webpack and refactor this file
 
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
@@ -25,15 +24,10 @@ $messageForm.addEventListener('submit', async e => {
     }
 
     displayMessageOnChatScreen({ message_content, identity: 'user' })
-
     const { assistant_response, intent } = await sendMessageToAssistant(
         message_content
     )
-
-    displayMessageOnChatScreen({ assistant_response, identity: 'watson' })
-
-    await checkIntent(intent)
-
+    await sendResponseToController(intent, assistant_response)
     activateButton()
 })
 
@@ -42,23 +36,6 @@ const messageIsEmpty = message_content => {
         return true
     }
     return false
-}
-
-const endConversationIntent = intent => {
-    if (intent === 'General_Ending') {
-        return true
-    }
-    return false
-}
-
-const checkIntent = async intent => {
-    if (intent === 'General_Ending') {
-        setTimeout(clearChat(), 1000)
-    }
-    if (intent === 'Session_restart') {
-        const restart = await fetch('/api/session/resetid', { method: 'post' })
-        console.log('Session ID cleared', restart)
-    }
 }
 
 const activateButton = () => {

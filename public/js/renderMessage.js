@@ -2,6 +2,10 @@ const {
     updateChatDisplay,
     setDisplayToViewNewMessage
 } = require('./displayController')
+const { messageTemplate } = require('./templates/message')
+const { imageTemplate } = require('./templates/image')
+const { timeTemplate } = require('./templates/time')
+const { warningTemplate } = require('./templates/warning')
 
 export const displayMessageOnChatScreen = input_object => {
     const {
@@ -28,40 +32,14 @@ export const displayMessageOnChatScreen = input_object => {
     if (identity === 'warning') {
         outputMessage += warningTemplate(warning_content, time)
     }
+    if (identity === 'image_bot') {
+        const className = 'blue'
+        outputMessage += timeTemplate(time)
+        outputMessage += imageTemplate(assistant_response, className)
+    }
     outputMessage += `</div>`
     updateChatDisplay(outputMessage)
     setDisplayToViewNewMessage()
-}
-
-const timeTemplate = time => {
-    return `
-    <div class="eight wide column time-display">
-        <div class="time-container">
-            <p class="time">${time}</p>
-        </div>    
-    </div>
-    `
-}
-
-const messageTemplate = (message, className) => {
-    return `
-    <div class="eight wide column">
-        <div class="ui ${className} message">
-            <p>${message}</p>
-        </div>
-    </div>
-    `
-}
-
-const warningTemplate = (warning, time) => {
-    return `
-    <div class="sixteen wide column">
-        <div class="ui negative message">
-            <p>${warning}</p>
-            <p>${time}</p>
-        </div>
-    </div>
-    `
 }
 
 const getCurrentTime = () => {

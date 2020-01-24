@@ -44,11 +44,8 @@ exports.sendMessage = async (req, res) => {
             console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
-            console.log('message', err.message)
-            console.log('headers.connection', err.headers.connection)
-            console.log('code', err.code)
+
             if (isInvalidId(err.message, err.headers.connection, err.code)) {
-                console.log('ERRORRROROROROROR')
                 let assistant_response =
                     'Wait a second please. I have to restart the session.'
                 let intent = 'Session_restart'
@@ -57,15 +54,30 @@ exports.sendMessage = async (req, res) => {
             return res.status(status).json(err)
         }
 
-        const intent = data.result.output.intents[0].intent
+        const res_type = data.result.output.generic[0].response_type
+        let intent = data.result.output.intents[0].intent
         let assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
             endSession(req.session.session_id, assistantId)
             req.session.session_id = null
         }
+
+        if (responseIsImage(res_type)) {
+            assistant_response = data.result.output.generic[0].source
+            intent = 'Display_image'
+            return res.json({ assistant_response, intent })
+        }
+
         res.json({ assistant_response, intent })
     })
+}
+
+const responseIsImage = response_type => {
+    if (response_type === 'image') {
+        return true
+    }
+    return false
 }
 
 const startSession = async () => {
