@@ -1,6 +1,8 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
 
+// TODO: Fix the problem withe the Session id when user did not end the conversation
+
 const assistant = new AssistantV2({
     version: '2019-02-28',
     authenticator: new IamAuthenticator({
@@ -34,29 +36,56 @@ exports.sendMessage = async (req, res) => {
             text: userInputMessage
         }
     }
-    console.log('payload.sessionId: ', payload.sessionId)
+
     // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
-            console.log('THE BIG BAD ERROR')
-            console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
+
+            if (isInvalidId(err.message, err.headers.connection, err.code)) {
+                console.log('Send restart seesion')
+                let assistant_response =
+                    'Wait a second please. I have to restart the session.'
+                let intent = 'Session_restart'
+                return res.json({ assistant_response, intent })
+            }
             return res.status(status).json(err)
         }
-
-        console.log(data.result.output.intents[0].intent)
-
-        const intent = data.result.output.intents[0].intent
-
+        let intent = ''
+        const res_type = data.result.output.generic[0].response_type
+        intent = checkIntent(data.result.output.intents[0])
         let assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
             endSession(req.session.session_id, assistantId)
             req.session.session_id = null
         }
-        res.json(assistant_response)
+
+        if (responseIsImage(res_type)) {
+            assistant_response = data.result.output.generic[0].source
+            intent = 'Display_image'
+            return res.json({ assistant_response, intent })
+        }
+
+        res.json({ assistant_response, intent })
     })
+}
+const checkIntent = intents_first_element => {
+    let intent = ''
+    if (intents_first_element === undefined) {
+        intent = 'Irrelevant'
+    } else {
+        intent = intents_first_element.intent
+    }
+    return intent
+}
+
+const responseIsImage = response_type => {
+    if (response_type === 'image') {
+        return true
+    }
+    return false
 }
 
 const startSession = async () => {
@@ -66,7 +95,7 @@ const startSession = async () => {
             assistantId: process.env.ASSISTANT_ID || '{assistant_id}'
         })
         .then(res => {
-            console.log('1:', res.result.session_id)
+            console.log('Watson Assistant Session started')
             SESSION_ID = res.result.session_id
         })
         .catch(err => {
@@ -87,4 +116,15 @@ const endSession = (sessionId, assistantId) => {
         .catch(err => {
             console.log(err)
         })
+}
+
+const isInvalidId = (message, connection, code) => {
+    if (
+        message === 'Invalid Session' &&
+        connection === 'close' &&
+        code === 404
+    ) {
+        return true
+    }
+    return false
 }

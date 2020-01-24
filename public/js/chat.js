@@ -1,88 +1,53 @@
-console.log('Success')
+const _ = require('lodash')
+require('@babel/polyfill') // to use async functions with webpack
+
+const { displayMessageOnChatScreen } = require('./renderMessage')
+const { sendMessageToAssistant } = require('./sendMessage')
+const { sendResponseToController } = require('./messageController')
 
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
-const $chatDisplay = document.querySelector('#chat-display')
+
+// TODO: add penguin tech support with picture of completely broken mashine (asking if the pc looks like this)
 
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
-    $messageFormButton.setAttribute('disabled', 'disabled')
-    const message = e.target.message.value
+    deactivateButton()
+    const message_content = e.target.message.value
+    const msgIsEmpty = messageIsEmpty(message_content)
+    if (msgIsEmpty) {
+        activateButton()
+        const warning_content = 'The message can not be empty'
+        displayMessageOnChatScreen({ warning_content, identity: 'warning' })
+        return
+    }
 
-    const userOutput = userMessage(message)
-    updateChatDisplay(userOutput)
+    displayMessageOnChatScreen({ message_content, identity: 'user' })
+    const { assistant_response, intent } = await sendMessageToAssistant(
+        message_content
+    )
+    if (intent === undefined) {
+        console.log('Undefined intent')
+        intent = 'default'
+    }
+    await sendResponseToController(intent, assistant_response)
+    activateButton()
+})
 
-    const assistantResponse = await sendMessageToAssistant(message)
-    const assistantOutput = assistMessage(assistantResponse)
-    updateChatDisplay(assistantOutput)
+const messageIsEmpty = message_content => {
+    if (message_content === '') {
+        return true
+    }
+    return false
+}
 
+const activateButton = () => {
     $messageFormButton.removeAttribute('disabled')
     $messageFormInput.value = ''
     $messageFormInput.focus()
-    scrollToBottom()
-})
-
-const updateChatDisplay = messageTemplate => {
-    $chatDisplay.innerHTML += messageTemplate
 }
 
-const sendMessageToAssistant = async userInput => {
-    const formData = { message: userInput }
-
-    const res = await fetch('/api/message', {
-        method: 'post',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(formData)
-    })
-    let data = await res.json()
-    return data
-}
-
-const userMessage = msg_content => {
-    const time = getCurrentTime()
-    return `
-        <div class="ui grid">
-            <div class="eight wide column">
-                <div class="ui blue message user-input msg user">
-                    <p>${msg_content}</p>
-                </div>
-            </div>
-            <div class="eight wide column time-display">
-                    <p class="time">${time}</p>
-            </div>
-        </div>
-`
-}
-const assistMessage = msg_content => {
-    const time = getCurrentTime()
-
-    return `
-    <hr class="break">
-        <div class="ui grid">
-            <div class="eight wide column time-display">
-                <p class="time">${time}</p>
-            </div>
-        <div class="eight wide column">
-            <div class="ui success message user-input msg assist">
-                <p>${msg_content}</p>
-            </div>
-        </div>
-    </div>
-    `
-}
-
-function scrollToBottom() {
-    $chatDisplay.scrollTop =
-        $chatDisplay.scrollHeight - $chatDisplay.clientHeight
-}
-
-const getCurrentTime = () => {
-    const this_time = new Date()
-    const this_hour = this_time.getHours()
-    const this_Minutes = this_time.getMinutes()
-    const time = `${this_hour}:${this_Minutes}`
-    return time
+const deactivateButton = () => {
+    $messageFormButton.setAttribute('disabled', 'disabled')
 }

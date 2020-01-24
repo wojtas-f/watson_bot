@@ -7,7 +7,7 @@ const PageRoutes = require('./routes/pages')
 const cors = require('cors')
 const cookieSession = require('cookie-session')
 
-const publicDirectoryPath = path.join(__dirname, '../public')
+const publicDirectoryPath = path.join(__dirname, '../dist')
 const viewPath = path.join(__dirname, '../templates/views')
 const partialPath = path.join(__dirname, '../templates/partials')
 
@@ -17,7 +17,7 @@ hbs.registerPartials(partialPath)
 app.use(cors())
 app.set('trust proxy', 1) // trust first proxy
 
-app.use(express.static(publicDirectoryPath)) // load UI from public folder
+app.use(express.static(publicDirectoryPath))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

@@ -12,23 +12,19 @@
 
 <body>
     {{>header}}
-    <div class="ui container">
-        <div class="display-chat" id="chat-display">
+    <div class="chat">
+        <div class="chat__display" id="chat-display">
 
         </div>
 
-        <form class="sixteen wide column" id="message-form">
-            <div class="ui big action input send-message">
-                <input type="text" name="message" placeholder="Type your message">
-                <button type="submit" class="ui green button">Send</button>
-            </div>
+        <form class="chat__message_form" id="message-form">
+                <input type="text" name="message" placeholder="Type your message" class="chat__message_form-input">
+                <button type="submit" class="chat__message_form-input-button">Send</button>
         </form>
 
-
-
-
     </div>
-    <script src="/js/chat.js"></script>
+
+    <script src="/js/chat.bundle.js"></script>
 </body>
 
 </html>

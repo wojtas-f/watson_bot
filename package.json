@@ -2,23 +2,39 @@
   "name": "watson",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.8.3",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "handlebars": "^4.7.2",
     "hbs": "^4.1.0",
-    "ibm-watson": "^5.3.0"
+    "ibm-watson": "^5.3.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.1.1",
     "env-cmd": "^10.0.1",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   },
   "scripts": {
     "dev": "env-cmd -f ./config/config.env nodemon src/server.js -e js,css,hbs,html",
+    "webpack-dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "server": "webpack-dev-server --inline --hot",
     "start": "env-cmd -f ./config/config.env node src/server.js"
   },
+  "browserslist": [
+    "last 1 version",
+    "> 1%"
+  ],
   "author": "",
   "license": "ISC"
 }
