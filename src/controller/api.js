@@ -40,12 +40,11 @@ exports.sendMessage = async (req, res) => {
     // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
         if (err) {
-            console.log('THE BIG BAD ERROR')
-            console.log(err)
             const status =
                 err.code !== undefined && err.code > 0 ? err.code : 500
 
             if (isInvalidId(err.message, err.headers.connection, err.code)) {
+                console.log('Send restart seesion')
                 let assistant_response =
                     'Wait a second please. I have to restart the session.'
                 let intent = 'Session_restart'
@@ -53,9 +52,9 @@ exports.sendMessage = async (req, res) => {
             }
             return res.status(status).json(err)
         }
-
+        let intent = ''
         const res_type = data.result.output.generic[0].response_type
-        let intent = data.result.output.intents[0].intent
+        intent = checkIntent(data.result.output.intents[0])
         let assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
@@ -71,6 +70,15 @@ exports.sendMessage = async (req, res) => {
 
         res.json({ assistant_response, intent })
     })
+}
+const checkIntent = intents_first_element => {
+    let intent = ''
+    if (intents_first_element === undefined) {
+        intent = 'Irrelevant'
+    } else {
+        intent = intents_first_element.intent
+    }
+    return intent
 }
 
 const responseIsImage = response_type => {

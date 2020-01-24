@@ -27,6 +27,10 @@ $messageForm.addEventListener('submit', async e => {
     const { assistant_response, intent } = await sendMessageToAssistant(
         message_content
     )
+    if (intent === undefined) {
+        console.log('Undefined intent')
+        intent = 'default'
+    }
     await sendResponseToController(intent, assistant_response)
     activateButton()
 })
