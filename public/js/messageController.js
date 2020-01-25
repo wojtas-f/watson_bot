@@ -4,7 +4,12 @@ const { displayMessageOnChatScreen } = require('./renderMessage')
 export const sendResponseToController = async (intent, assistant_response) => {
     switch (intent) {
         case 'General_Ending':
-            setTimeout(clearChat(), 1000)
+            await fetch('/session/clear/chat', { method: 'post' })
+            displayMessageOnChatScreen({
+                assistant_response,
+                identity: 'watson'
+            })
+            setTimeout(clearChat(), 2000)
             break
         case 'Session_restart':
             await fetch('/session/resetid', {

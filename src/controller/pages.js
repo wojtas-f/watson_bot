@@ -22,13 +22,13 @@ exports.renderChat = (req, res) => {
  * @function
  */
 exports.clearSession = (req, res) => {
-    let session_id_cleared = false
     req.session.session_id = null
-    if (!req.session.session_id) {
-        session_id_cleared = true
-    }
-
-    res.send(session_id_cleared)
+    res.send('Session ID cleared')
+}
+exports.clearChatSession = (req, res) => {
+    req.session.session_id = null
+    req.session.chat = null
+    res.send('Chat session cleared')
 }
 
 /**
