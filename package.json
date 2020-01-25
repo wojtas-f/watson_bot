@@ -29,7 +29,7 @@
     "webpack-dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "server": "webpack-dev-server --inline --hot",
-    "start": "env-cmd -f ./config/config.env node src/server.js"
+    "start": "node src/server.js"
   },
   "browserslist": [
     "last 1 version",
