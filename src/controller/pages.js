@@ -27,7 +27,7 @@ exports.clearSession = (req, res) => {
     if (!req.session.session_id) {
         session_id_cleared = true
     }
-
+    console.log('log')
     res.send(session_id_cleared)
 }
 
