@@ -7,7 +7,7 @@ export const sendResponseToController = async (intent, assistant_response) => {
             setTimeout(clearChat(), 1000)
             break
         case 'Session_restart':
-            await fetch('/api/session/resetid', {
+            await fetch('/session/resetid', {
                 method: 'post'
             })
 

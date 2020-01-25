@@ -11,6 +11,15 @@ const assistant = new AssistantV2({
     url: process.env.ASSISTANT_URL
 })
 
+const payload = {
+    assistantId: '',
+    sessionId: '',
+    input: {
+        message_type: 'text',
+        text: ''
+    }
+}
+
 /**
  *  Return message
  *  POST(/api/message)
@@ -22,40 +31,34 @@ exports.sendMessage = async (req, res) => {
     }
 
     let assistantId = process.env.ASSISTANT_ID
-    let userInputMessage = ''
+    let userInputMessage = req.body.message
 
-    if (req.body.message) {
-        userInputMessage = req.body.message
-    }
+    payload.assistantId = assistantId
+    payload.sessionId = req.session.session_id
+    payload.input.text = userInputMessage
 
-    const payload = {
-        assistantId,
-        sessionId: req.session.session_id,
-        input: {
-            message_type: 'text',
-            text: userInputMessage
-        }
-    }
+    saveMessage(req, userInputMessage, (intent = 'Ask_Assistant'))
 
-    // Send the input to the assistant service
     assistant.message(payload, (err, data) => {
+        let assistant_response = ''
+        let intent = ''
         if (err) {
-            const status =
-                err.code !== undefined && err.code > 0 ? err.code : 500
+            assistant_response =
+                'Ups,something went wrong. Please, refresh the page and try again'
+            intent = 'Session_error'
 
             if (isInvalidId(err.message, err.headers.connection, err.code)) {
-                console.log('Send restart seesion')
-                let assistant_response =
+                assistant_response =
                     'Wait a second please. I have to restart the session.'
-                let intent = 'Session_restart'
-                return res.json({ assistant_response, intent })
+                intent = 'Session_restart'
             }
-            return res.status(status).json(err)
+
+            return res.json({ assistant_response, intent })
         }
-        let intent = ''
+
         const res_type = data.result.output.generic[0].response_type
         intent = checkIntent(data.result.output.intents[0])
-        let assistant_response = data.result.output.generic[0].text
+        assistant_response = data.result.output.generic[0].text
 
         if (intent === 'General_Ending') {
             endSession(req.session.session_id, assistantId)
@@ -65,12 +68,30 @@ exports.sendMessage = async (req, res) => {
         if (responseIsImage(res_type)) {
             assistant_response = data.result.output.generic[0].source
             intent = 'Display_image'
-            return res.json({ assistant_response, intent })
         }
 
+        saveMessage(req, assistant_response, intent)
         res.json({ assistant_response, intent })
     })
 }
+
+/**
+ *  Return message
+ *  GET(/api/chat/content)
+ *  @function
+ */
+exports.loadChatCotnent = (req, res) => {
+    res.send(req.session.chat)
+}
+
+const saveMessage = (req, message, intent) => {
+    if (!req.session.chat) {
+        req.session.chat = []
+    }
+    const chat = req.session.chat
+    chat.push({ message, intent })
+}
+
 const checkIntent = intents_first_element => {
     let intent = ''
     if (intents_first_element === undefined) {
@@ -83,6 +104,17 @@ const checkIntent = intents_first_element => {
 
 const responseIsImage = response_type => {
     if (response_type === 'image') {
+        return true
+    }
+    return false
+}
+
+const isInvalidId = (message, connection, code) => {
+    if (
+        message === 'Invalid Session' &&
+        connection === 'close' &&
+        code === 404
+    ) {
         return true
     }
     return false
@@ -116,15 +148,4 @@ const endSession = (sessionId, assistantId) => {
         .catch(err => {
             console.log(err)
         })
-}
-
-const isInvalidId = (message, connection, code) => {
-    if (
-        message === 'Invalid Session' &&
-        connection === 'close' &&
-        code === 404
-    ) {
-        return true
-    }
-    return false
 }
