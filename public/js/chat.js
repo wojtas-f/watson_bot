@@ -9,7 +9,19 @@ const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 
-// TODO: add penguin tech support with picture of completely broken mashine (asking if the pc looks like this)
+const loadChatContent = async () => {
+    const res = await fetch('/api/chat/content')
+    console.log(res)
+    if (res.status === 204) {
+        return
+    }
+    const data = await res.json()
+    data.forEach(item => {
+        sendResponseToController(item.intent, item.message)
+    })
+}
+
+loadChatContent()
 
 $messageForm.addEventListener('submit', async e => {
     e.preventDefault()

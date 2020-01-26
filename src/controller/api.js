@@ -81,7 +81,13 @@ exports.sendMessage = async (req, res) => {
  *  @function
  */
 exports.loadChatCotnent = (req, res) => {
-    res.send(req.session.chat)
+    let code
+    if (!req.session.chat) {
+        code = 204
+    } else {
+        code = 200
+    }
+    res.status(code).send(req.session.chat)
 }
 
 const saveMessage = (req, message, intent) => {
