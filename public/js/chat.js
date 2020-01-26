@@ -27,16 +27,17 @@ $messageForm.addEventListener('submit', async e => {
     e.preventDefault()
     deactivateButton()
     const message_content = e.target.message.value
-    const msgIsEmpty = messageIsEmpty(message_content)
 
-    if (msgIsEmpty) {
+    let user_intent = 'Ask_Assistant'
+    if (messageIsEmpty(message_content)) {
         activateButton()
         const warning_content = 'The message can not be empty'
-        displayMessageOnChatScreen({ warning_content, identity: 'warning' })
+        user_intent = 'Warning'
+        sendResponseToController(user_intent, warning_content)
         return
     }
 
-    displayMessageOnChatScreen({ message_content, identity: 'user' })
+    sendResponseToController(user_intent, message_content)
     const { assistant_response, intent } = await sendMessageToAssistant(
         message_content
     )
