@@ -149,7 +149,7 @@ const endSession = (sessionId, assistantId) => {
             sessionId
         })
         .then(res => {
-            console.log('Sessio closed')
+            console.log('Session closed')
             //console.log(JSON.stringify(res, null, 2))
         })
         .catch(err => {
