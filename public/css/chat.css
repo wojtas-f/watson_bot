@@ -41,11 +41,6 @@
     color: white;
 }
 
-.message{
-    animation-name: show-message;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
-}
 
 .time-display {
     width: 100%;
@@ -60,10 +55,3 @@
     margin: 25px 5px;
 }
 
-@keyframes show-message {
-    0%   {opacity: 0}
-    25%  {opacity: 0.25}
-    50%  {opacity: 0.50}
-    75%  {opacity: 0.75}
-    100% {opacity: 1}
-}

@@ -1,7 +1,10 @@
 const $chatDisplay = document.querySelector('#chat-display')
 
 export const updateChatDisplay = messageTemplate => {
-    $chatDisplay.innerHTML += messageTemplate
+    const message = document.createElement('div')
+    message.innerHTML = messageTemplate
+
+    document.getElementById('chat-display').appendChild(message)
 }
 
 export const setDisplayToViewNewMessage = () => {

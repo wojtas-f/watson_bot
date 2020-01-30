@@ -27595,7 +27595,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearChat", function() { return clearChat; });
 var $chatDisplay = document.querySelector('#chat-display');
 var updateChatDisplay = function updateChatDisplay(messageTemplate) {
-  $chatDisplay.innerHTML += messageTemplate;
+  var message = document.createElement('div');
+  message.innerHTML = messageTemplate;
+  document.getElementById('chat-display').appendChild(message);
 };
 var setDisplayToViewNewMessage = function setDisplayToViewNewMessage() {
   $chatDisplay.scrollTop = $chatDisplay.scrollHeight - $chatDisplay.clientHeight;
@@ -27733,7 +27735,8 @@ var _require4 = __webpack_require__(/*! ./templates/time */ "./public/js/templat
     timeTemplate = _require4.timeTemplate;
 
 var _require5 = __webpack_require__(/*! ./templates/warning */ "./public/js/templates/warning.js"),
-    warningTemplate = _require5.warningTemplate;
+    warningTemplate = _require5.warningTemplate; //TODO: use document.createElement
+
 
 var displayMessageOnChatScreen = function displayMessageOnChatScreen(input_object) {
   var warning_content = input_object.warning_content,
