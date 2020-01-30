@@ -1,8 +1,6 @@
 const AssistantV2 = require('ibm-watson/assistant/v2')
 const { IamAuthenticator } = require('ibm-watson/auth')
 
-// TODO: Fix the problem withe the Session id when user did not end the conversation
-
 const assistant = new AssistantV2({
     version: '2019-02-28',
     authenticator: new IamAuthenticator({
@@ -27,7 +25,8 @@ const payload = {
  */
 exports.sendMessage = async (req, res) => {
     if (!req.session.session_id) {
-        req.session.session_id = await startSession()
+        const num_session_id = await startSession()
+        req.session.session_id = num_session_id.toString()
     }
 
     let assistantId = process.env.ASSISTANT_ID
@@ -46,7 +45,6 @@ exports.sendMessage = async (req, res) => {
             assistant_response =
                 'Ups,something went wrong. Please, refresh the page and try again'
             intent = 'Session_error'
-
             if (isInvalidId(err.message, err.headers.connection, err.code)) {
                 assistant_response =
                     'Wait a second please. I have to restart the session.'
@@ -149,7 +147,8 @@ const endSession = (sessionId, assistantId) => {
             sessionId
         })
         .then(res => {
-            console.log(JSON.stringify(res, null, 2))
+            console.log('Session closed')
+            //console.log(JSON.stringify(res, null, 2))
         })
         .catch(err => {
             console.log(err)

@@ -7,6 +7,7 @@ const { imageTemplate } = require('./templates/image')
 const { timeTemplate } = require('./templates/time')
 const { warningTemplate } = require('./templates/warning')
 
+//TODO: use document.createElement
 export const displayMessageOnChatScreen = input_object => {
     const {
         warning_content,

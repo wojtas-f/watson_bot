@@ -3,6 +3,12 @@ const { displayMessageOnChatScreen } = require('./renderMessage')
 
 export const sendResponseToController = async (intent, message) => {
     switch (intent) {
+        case 'Warning':
+            displayMessageOnChatScreen({
+                warning_content: message,
+                identity: 'warning'
+            })
+            break
         case 'General_Ending':
             await fetch('/session/clear/chat', { method: 'post' })
             displayMessageOnChatScreen({

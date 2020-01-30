@@ -27511,7 +27511,7 @@ function () {
   var _ref2 = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee2(e) {
-    var message_content, msgIsEmpty, warning_content, _ref3, assistant_response, intent;
+    var message_content, user_intent, warning_content, _ref3, assistant_response, intent;
 
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -27520,40 +27520,35 @@ function () {
             e.preventDefault();
             deactivateButton();
             message_content = e.target.message.value;
-            msgIsEmpty = messageIsEmpty(message_content);
+            user_intent = 'Ask_Assistant';
 
-            if (!msgIsEmpty) {
-              _context2.next = 9;
+            if (!messageIsEmpty(message_content)) {
+              _context2.next = 10;
               break;
             }
 
             activateButton();
             warning_content = 'The message can not be empty';
-            displayMessageOnChatScreen({
-              warning_content: warning_content,
-              identity: 'warning'
-            });
+            user_intent = 'Warning';
+            sendResponseToController(user_intent, warning_content);
             return _context2.abrupt("return");
 
-          case 9:
-            displayMessageOnChatScreen({
-              message_content: message_content,
-              identity: 'user'
-            });
-            _context2.next = 12;
+          case 10:
+            sendResponseToController(user_intent, message_content);
+            _context2.next = 13;
             return sendMessageToAssistant(message_content);
 
-          case 12:
+          case 13:
             _ref3 = _context2.sent;
             assistant_response = _ref3.assistant_response;
             intent = _ref3.intent;
-            _context2.next = 17;
+            _context2.next = 18;
             return sendResponseToController(intent, assistant_response);
 
-          case 17:
+          case 18:
             activateButton();
 
-          case 18:
+          case 19:
           case "end":
             return _context2.stop();
         }
@@ -27600,7 +27595,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearChat", function() { return clearChat; });
 var $chatDisplay = document.querySelector('#chat-display');
 var updateChatDisplay = function updateChatDisplay(messageTemplate) {
-  $chatDisplay.innerHTML += messageTemplate;
+  var message = document.createElement('div');
+  message.innerHTML = messageTemplate;
+  document.getElementById('chat-display').appendChild(message);
 };
 var setDisplayToViewNewMessage = function setDisplayToViewNewMessage() {
   $chatDisplay.scrollTop = $chatDisplay.scrollHeight - $chatDisplay.clientHeight;
@@ -27642,57 +27639,64 @@ function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.t0 = intent;
-            _context.next = _context.t0 === 'General_Ending' ? 3 : _context.t0 === 'Ask_Assistant' ? 8 : _context.t0 === 'Session_restart' ? 10 : _context.t0 === 'Display_image' ? 14 : 16;
+            _context.next = _context.t0 === 'Warning' ? 3 : _context.t0 === 'General_Ending' ? 5 : _context.t0 === 'Ask_Assistant' ? 10 : _context.t0 === 'Session_restart' ? 12 : _context.t0 === 'Display_image' ? 16 : 18;
             break;
 
           case 3:
-            _context.next = 5;
+            displayMessageOnChatScreen({
+              warning_content: message,
+              identity: 'warning'
+            });
+            return _context.abrupt("break", 19);
+
+          case 5:
+            _context.next = 7;
             return fetch('/session/clear/chat', {
               method: 'post'
             });
 
-          case 5:
+          case 7:
             displayMessageOnChatScreen({
               assistant_response: message,
               identity: 'watson'
             });
             setTimeout(clearChat(), 2000);
-            return _context.abrupt("break", 17);
+            return _context.abrupt("break", 19);
 
-          case 8:
+          case 10:
             displayMessageOnChatScreen({
               message_content: message,
               identity: 'user'
             });
-            return _context.abrupt("break", 17);
+            return _context.abrupt("break", 19);
 
-          case 10:
-            _context.next = 12;
+          case 12:
+            _context.next = 14;
             return fetch('/session/resetid', {
               method: 'post'
             });
 
-          case 12:
+          case 14:
             displayMessageOnChatScreen({
               assistant_response: message,
               identity: 'watson'
             });
-            return _context.abrupt("break", 17);
-
-          case 14:
-            displayMessageOnChatScreen({
-              assistant_response: message,
-              identity: 'image_bot'
-            });
-            return _context.abrupt("break", 17);
+            return _context.abrupt("break", 19);
 
           case 16:
             displayMessageOnChatScreen({
               assistant_response: message,
+              identity: 'image_bot'
+            });
+            return _context.abrupt("break", 19);
+
+          case 18:
+            displayMessageOnChatScreen({
+              assistant_response: message,
               identity: 'watson'
             });
 
-          case 17:
+          case 19:
           case "end":
             return _context.stop();
         }
@@ -27731,7 +27735,8 @@ var _require4 = __webpack_require__(/*! ./templates/time */ "./public/js/templat
     timeTemplate = _require4.timeTemplate;
 
 var _require5 = __webpack_require__(/*! ./templates/warning */ "./public/js/templates/warning.js"),
-    warningTemplate = _require5.warningTemplate;
+    warningTemplate = _require5.warningTemplate; //TODO: use document.createElement
+
 
 var displayMessageOnChatScreen = function displayMessageOnChatScreen(input_object) {
   var warning_content = input_object.warning_content,
