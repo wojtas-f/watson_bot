@@ -27744,7 +27744,7 @@ var displayMessageOnChatScreen = function displayMessageOnChatScreen(input_objec
       assistant_response = input_object.assistant_response,
       identity = input_object.identity;
   var time = getCurrentTime();
-  var outputMessage = "<div class=\"ui grid\">";
+  var outputMessage = "<div class=\"chat__display_row\">";
 
   if (identity === 'user') {
     var className = 'success';
@@ -27777,6 +27777,15 @@ var getCurrentTime = function getCurrentTime() {
   var this_time = new Date();
   var this_hour = this_time.getHours();
   var this_Minutes = this_time.getMinutes();
+
+  if (this_hour < 10) {
+    this_hour = '0' + this_hour;
+  }
+
+  if (this_Minutes < 10) {
+    this_Minutes = '0' + this_Minutes;
+  }
+
   var time = "".concat(this_hour, ":").concat(this_Minutes);
   return time;
 };
@@ -27860,7 +27869,7 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageTemplate", function() { return imageTemplate; });
 var imageTemplate = function imageTemplate(img_src, className) {
-  return "\n    <div class=\"eight wide column\">\n        <div class=\"ui ".concat(className, " message\">\n            <img src=\"").concat(img_src, "\" alt=\"Image not found\" class=\"chat__display-message-img\">\n        </div>\n    </div>\n    ");
+  return "\n    <div class=\"chat__message_container\">\n        <div class=\"ui ".concat(className, " message\">\n            <img src=\"").concat(img_src, "\" alt=\"Image not found\" class=\"chat__display-message-img\">\n        </div>\n    </div>\n    ");
 };
 
 /***/ }),
@@ -27876,7 +27885,7 @@ var imageTemplate = function imageTemplate(img_src, className) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "messageTemplate", function() { return messageTemplate; });
 var messageTemplate = function messageTemplate(message, className) {
-  return "\n    <div class=\"eight wide column\">\n        <div class=\"ui ".concat(className, " message\">\n            <p>").concat(message, "</p>\n        </div>\n    </div>\n    ");
+  return "\n    <div class=\"chat__message_container\">\n        <div class=\"ui ".concat(className, " message\">\n            <p>").concat(message, "</p>\n        </div>\n    </div>\n    ");
 };
 
 /***/ }),
@@ -27892,7 +27901,7 @@ var messageTemplate = function messageTemplate(message, className) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timeTemplate", function() { return timeTemplate; });
 var timeTemplate = function timeTemplate(time) {
-  return "\n    <div class=\"eight wide column time-display\">\n        <div class=\"time-container\">\n            <p class=\"time\">".concat(time, "</p>\n        </div>    \n    </div>\n    ");
+  return "\n    <div class=\"chat__message_time\">\n        <div class=\"time-display\">\n            <p class=\"time\">".concat(time, "</p>\n        </div>    \n    </div>\n    ");
 };
 
 /***/ }),
@@ -27908,7 +27917,7 @@ var timeTemplate = function timeTemplate(time) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "warningTemplate", function() { return warningTemplate; });
 var warningTemplate = function warningTemplate(warning, time) {
-  return "\n    <div class=\"sixteen wide column\">\n        <div class=\"ui negative message\">\n            <p>".concat(warning, "</p>\n            <p>").concat(time, "</p>\n        </div>\n    </div>\n    ");
+  return "\n    <div class=\"\">\n        <div class=\"ui negative message\">\n            <p>".concat(warning, "</p>\n            <p>").concat(time, "</p>\n        </div>\n    </div>\n    ");
 };
 
 /***/ }),
