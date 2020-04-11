@@ -11,19 +11,18 @@ const $messageFormButton = $messageForm.querySelector('button')
 
 const loadChatContent = async () => {
     const res = await fetch('/api/chat/content')
-    console.log(res)
     if (res.status === 204) {
         return
     }
     const data = await res.json()
-    data.forEach(item => {
+    data.forEach((item) => {
         sendResponseToController(item.intent, item.message)
     })
 }
 
 loadChatContent()
 
-$messageForm.addEventListener('submit', async e => {
+$messageForm.addEventListener('submit', async (e) => {
     e.preventDefault()
     deactivateButton()
     const message_content = e.target.message.value
@@ -46,7 +45,7 @@ $messageForm.addEventListener('submit', async e => {
     activateButton()
 })
 
-const messageIsEmpty = message_content => {
+const messageIsEmpty = (message_content) => {
     if (message_content === '') {
         return true
     }

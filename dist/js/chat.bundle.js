@@ -27472,26 +27472,25 @@ function () {
 
           case 2:
             res = _context.sent;
-            console.log(res);
 
             if (!(res.status === 204)) {
-              _context.next = 6;
+              _context.next = 5;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 6:
-            _context.next = 8;
+          case 5:
+            _context.next = 7;
             return res.json();
 
-          case 8:
+          case 7:
             data = _context.sent;
             data.forEach(function (item) {
               sendResponseToController(item.intent, item.message);
             });
 
-          case 10:
+          case 9:
           case "end":
             return _context.stop();
         }
