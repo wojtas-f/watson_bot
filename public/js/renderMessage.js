@@ -1,6 +1,6 @@
 const {
     updateChatDisplay,
-    setDisplayToViewNewMessage
+    setDisplayToViewNewMessage,
 } = require('./displayController')
 const { messageTemplate } = require('./templates/message')
 const { imageTemplate } = require('./templates/image')
@@ -8,12 +8,12 @@ const { timeTemplate } = require('./templates/time')
 const { warningTemplate } = require('./templates/warning')
 
 //TODO: use document.createElement
-export const displayMessageOnChatScreen = input_object => {
+export const displayMessageOnChatScreen = (input_object) => {
     const {
         warning_content,
         message_content,
         assistant_response,
-        identity
+        identity,
     } = input_object
 
     const time = getCurrentTime()
@@ -21,7 +21,7 @@ export const displayMessageOnChatScreen = input_object => {
     let outputMessage = `<div class="chat__display_row">`
 
     if (identity === 'user') {
-        const className = 'success'
+        const className = 'violet'
         outputMessage += messageTemplate(message_content, className)
         outputMessage += timeTemplate(time)
     }

@@ -1,11 +1,24 @@
+:root{
+    --primary: #222222;
+    --secondary: #767474;
+    /* --accents: #65AFFF; */
+    --accents: #72D1DD;
+    --text: #EDEDED;
+}
+
+body{
+    background-color: var(--primary);
+}
+
 .chat {
     box-sizing: border-box;
     width: 100%;
+    background-color: var(--primary);
 }
 
 .chat__display {
     width: 100%;
-    background-color: rgba(229, 243, 204, 0.486);
+    background-color: var(--secondary);
     height: 80vh;
     padding: 0 20px;
     box-sizing: border-box;
@@ -27,8 +40,8 @@
 }
 .chat__message_form-input-button {
     width: 30%;
-    background-color: rgb(6, 190, 37);
-    color: white;
+    background-color: var(--accents);
+    color: var(--text);
 }
 
 .chat__display_row{
@@ -102,7 +115,7 @@
     .chat__display {
         margin-top: 55px;
         width: 50%;
-        background-color: rgba(229, 243, 204, 0.486);
+        background-color: var(--secondary);
         border-radius: 15px 15px 0 0;
         height: 80vh;
         border-top: 2px solid black;
@@ -132,12 +145,17 @@
     .chat__message_form-input-button {
         width: 30%;
         border-bottom-right-radius: 15px;
-        background-color: rgb(6, 190, 37);
-        color: white;
+        background-color: var(--secondary);
+        color: var(--text);
+    }
+    .chat__message_form-input-button:hover{
+        background-color: var(--accents);
+        cursor: pointer;
     }
     
     .time-display {
         width: 100%;
+        color: var(--text)
     }
     
     .time {
@@ -151,3 +169,15 @@
     
 }
 
+
+.menu-custom-item{
+    background-color: var(--secondary)!important;
+}
+
+.menu-custom-item:hover{
+    background-color: var(--accents)!important;
+}
+
+h2{
+    color: var(--text)!important;
+}
