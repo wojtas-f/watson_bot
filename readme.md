@@ -1,7 +1,5 @@
 # Bot application with Watson Assistant
 
-You can test this app here [PenguinTechAssistant](https://penguin-chat-bot.herokuapp.com/)
-
 The primary reason for creating this app was to test [Watson Assistant API](https://cloud.ibm.com/apidocs/assistant/assistant-v2?code=node#introduction).
 
 If you need more information, you can check a [sample application](https://github.com/watson-developer-cloud/assistant-simple) that demonstrates the Watson Assistant service.
